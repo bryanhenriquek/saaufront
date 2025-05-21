@@ -64,11 +64,21 @@ export default function Register() {
     };
 
     return (
-        <main className="min-h-screen bg-[url('/back_ground.png')] bg-cover bg-center">
-            <div className="flex flex-col items-center justify-center h-screen px-4 bg-amber-300">
-                <div className="text-2xl font-bold mb-5 text-[#181e7e]">
-                    Cadastro
-                </div>
+        <main className="min-h-screen flex">
+            <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
+                <img src="/next.svg" alt="Logo" className="mb-6 w-32 h-auto" />
+                <h2 className="text-4xl font-bold mb-4">Já possui login?</h2>
+                <p className="mb-6 text-center max-w-sm">
+                    Clique no botão abaixo.
+                </p>
+                <Link
+                    href="/"
+                    className="border border-white text-white py-2 px-6 rounded-full hover:bg-white hover:text-[#5F259F] transition "
+                >
+                    LOGIN
+                </Link>
+            </div>
+            <div className="w-1/2 bg-gray-100 flex flex-col items-center justify-center p-10">
                 <form
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-4 bg-white bg-opacity-80 p-8 rounded-xl shadow-2xl w-auto"
@@ -76,7 +86,7 @@ export default function Register() {
                     {/* Nome */}
                     <div className="flex flex-col w-xs">
                         <label htmlFor="username" className="mb-1 font-semibold text-sm text-black">
-                            Nome completo
+                            Primeiro Nome
                         </label>
                         <input
                             type="text"
@@ -180,19 +190,11 @@ export default function Register() {
                     {/* Botão */}
                     <button
                         type="submit"
-                        className="bg-[#181e7e] text-white py-2 px-4 rounded-md hover:bg-blue-900 transition cursor-pointer"
+                        className="bg-[#5f259f] text-white py-2 px-4 rounded-md hover:bg-[#2e124f] transition cursor-pointer"
                     >
                         Cadastrar
                     </button>
                 </form>
-
-                {/* Link para login */}
-                <div className="flex justify-center text-sm text-gray-500 mt-4">
-                    <span className="mr-1">Já tem uma conta?</span>
-                    <Link href="/" className="text-blue-500 hover:underline">
-                        Entrar
-                    </Link>
-                </div>
             </div>
         </main>
     );

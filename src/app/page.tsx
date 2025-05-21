@@ -33,11 +33,21 @@ export default function Login() {
   };
 
   return (
-    <main className="min-h-screen bg-[url('/back_ground.png')] bg-cover bg-center">
-      <div className="flex flex-col items-center justify-center h-screen px-4 bg-amber-300">
-        <div className="text-2xl font-bold mb-5 text-[#181e7e]">
-          Login
-        </div>
+    <main className="min-h-screen flex">
+      <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
+        <img src="/next.svg" alt="Logo" className="mb-6 w-32 h-auto" />
+        <h2 className="text-4xl font-bold mb-4">Bem-vindo(a)</h2>
+        <p className="mb-6 text-center max-w-sm">
+          Caso ainda não tenha cadastro, clique no botão abaixo.
+        </p>
+        <Link
+          href="/register"
+          className="border border-white text-white py-2 px-6 rounded-full hover:bg-white hover:text-[#5F259F] transition "
+        >
+          CADASTRAR
+        </Link>
+      </div>
+      <div className="w-1/2 bg-gray-100 flex flex-col items-center justify-center p-10">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 bg-white bg-opacity-80 p-8 rounded-xl shadow-2xl w-auto"
@@ -80,30 +90,19 @@ export default function Login() {
             </div>
           </div>
 
-          {/* <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              name="rememberMe"
-              className="cursor-pointer"
-            />
-            <label htmlFor="rememberMe" className="cursor-pointer">
-              Manter conectado
-            </label>
-          </div> */}
           <button
             type="submit"
-            className="bg-[#181e7e] text-white py-2 px-4 rounded-md hover:bg-blue-900 transition cursor-pointer"
+            className="bg-[#5F259F] text-white py-2 px-4 rounded-md hover:bg-[#2e124f] transition cursor-pointer"
           >
             Entrar
           </button>
+
+          <div className="flex justify-center text-sm text-gray-500 mt-4">
+            <Link href="/terms" className="text-[#2d2d2d] hover:underline font-bold">
+              Políticas de Privacidade e os Termos de Uso
+            </Link>
+          </div>
         </form>
-        <div className="flex justify-center text-sm text-gray-500 mt-4">
-          <span className="mr-1">Não tem uma conta?</span>
-          <Link href="/register" className="text-blue-500 hover:underline">
-            Cadastre-se
-          </Link>
-        </div>
       </div>
     </main>
   );
