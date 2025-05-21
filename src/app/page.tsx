@@ -1,48 +1,40 @@
 'use client'
 
-//import { useRouter } from 'next/navigation';
-//import Image from "next/image";
-//import { login } from '@/services/api';
-//import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { login } from '@/services/api';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Login() {
-  //const router = useRouter();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //const formData = new FormData(e.target as HTMLFormElement);
+    const formData = new FormData(e.target as HTMLFormElement);
 
-    // try {
-    //   const response = await login(formData);
+    try {
+      const response = await login(formData);
 
-    //   const user = { ...response.user };
-    //   delete user.password;
+      const user = { ...response.user };
+      delete user.password;
 
-    //   localStorage.setItem('accessToken', response.access);
-    //   localStorage.setItem('refreshToken', response.refresh);
-    //   localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem('accessToken', response.access);
+      localStorage.setItem('refreshToken', response.refresh);
+      localStorage.setItem('user', JSON.stringify(response.user));
 
-    //   router.push('/pages/users');
-    // } catch (error) {
-    //   console.error("Login failed:", error);
-    //   toast.error("Erro ao fazer login.");
-    // }
+      router.push('/pages/users');
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Erro ao fazer login.");
+    }
   };
 
   return (
     <main className="min-h-screen bg-[url('/back_ground.png')] bg-cover bg-center">
       <div className="flex flex-col items-center justify-center h-screen px-4 bg-amber-300">
-        {/* <Image
-          src={"/full_logo.png"}
-          alt="logo"
-          width={600}
-          height={500}
-          className="mb-10"
-        /> */}
         <div className="text-2xl font-bold mb-5 text-[#181e7e]">
           Login
         </div>
