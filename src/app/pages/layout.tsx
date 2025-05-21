@@ -1,7 +1,7 @@
 'use client'
 
-//import { useRouter } from 'next/navigation';
-//import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast'
 import "../globals.css";
 
@@ -12,14 +12,14 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //const router = useRouter();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("accessToken");
-  //   if (!token) {
-  //     router.push("/");
-  //   }
-  // }, [router]);
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      router.push("/");
+    }
+  }, [router]);
 
   return (
     <>

@@ -39,5 +39,11 @@ export const login = async (data: FormData) => {
   return res.data;
 };
 
+export const register = async (data: FormData) => {
+  const res = await api.post("users/create/", data);
+  return res.data;
+};
+
+
 
 export default api;

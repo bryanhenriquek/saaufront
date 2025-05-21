@@ -2,14 +2,18 @@
 
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { register } from '@/services/api';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+    const router = useRouter();
+
     const [showPassword, setShowPassword] = useState(false);
     const [cpf, setCpf] = useState('');
     const [phone, setPhone] = useState('');
 
-    // ✅ Máscara de CPF
     const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 11) value = value.slice(0, 11);
@@ -22,7 +26,6 @@ export default function Register() {
         setCpf(formatted);
     };
 
-    // ✅ Máscara de Telefone
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 11) value = value.slice(0, 11);
@@ -39,26 +42,25 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData = new FormData(e.target as HTMLFormElement);
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
 
-        const payload = {
-            username: formData.get('username'),
-            email: formData.get('email'),
-            password: formData.get('password'),
-            birthdate: formData.get('birthdate'),
-            document: cpf,
-            phone: phone,
-        };
 
-        console.log('Payload:', payload);
+        formData.set('document', cpf);
+        formData.set('phone', phone);
+        formData.set('role', 'user');
+        formData.set('is_active', 'true');
+        formData.set('is_superuser', 'false');
+        formData.set('is_staff', 'false');
 
-        // try {
-        //     await register(payload);
-        //     router.push('/login');
-        // } catch (error) {
-        //     console.error(error);
-        //     toast.error('Erro no cadastro');
-        // }
+        try {
+            await register(formData);
+            toast.success('Cadastro realizado com sucesso!');
+            router.push('/');
+        } catch (error) {
+            console.error(error);
+            toast.error('Erro no cadastro');
+        }
     };
 
     return (
@@ -132,8 +134,8 @@ export default function Register() {
                         </label>
                         <input
                             type="date"
-                            id="birthdate"
-                            name="birthdate"
+                            id="birth_date"
+                            name="birth_date"
                             required
                             className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                         />
