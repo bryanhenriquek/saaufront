@@ -24,7 +24,7 @@ export default function NaviBar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 h-screen w-[220px] bg-white/90 backdrop-blur border-r border-gray-200 shadow-lg rounded-r-2xl p-4 flex flex-col items-center">
+    <nav className="fixed top-0 left-0 h-screen w-[200px] bg-white/90 backdrop-blur border-r border-gray-200 shadow-lg rounded-r-2xl p-4 flex flex-col items-center">
 
       {/* Navigation links */}
       <ul className="w-full flex flex-col gap-1 mt-6">
@@ -35,11 +35,11 @@ export default function NaviBar() {
             <li key={href}>
               <Link
                 href={href}
-                className={`group relative flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-sm transition-colors hover:bg-gray-100 ${active ? "text-blue-600" : "text-gray-700"}`}
+                className={`group relative flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-sm transition-colors hover:bg-gray-100 ${active ? "text-[#5f259f]" : "text-gray-700"}`}
               >
                 {/* Left accent bar when active */}
                 {active && (
-                  <span className="absolute -left-4 h-full w-1 rounded-r-lg bg-blue-600" />
+                  <span className="absolute -left-4 h-full w-1 rounded-r-lg bg-[#5f259f]" />
                 )}
 
                 <IconComponent className="shrink-0" size={18} />
@@ -56,7 +56,7 @@ export default function NaviBar() {
       {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="flex items-center gap-2 text-red-500 hover:text-red-700 text-sm font-medium mb-4 cursor-pointer"
+        className="flex items-center gap-2 text-purple-900 hover:text-purple-400 text-sm font-medium mb-4 cursor-pointer"
       >
         <FaSignOutAlt size={18} />
         Sair

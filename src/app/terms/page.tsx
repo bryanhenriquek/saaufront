@@ -7,6 +7,9 @@ export default function Terms() {
         <main className="min-h-screen bg-[url('/back_ground.png')] bg-cover bg-center">
             <div className="flex flex-col items-center justify-center h-screen px-4 bg-[#5F259F]">
                 <div className="bg-white bg-opacity-90 p-8 rounded-xl shadow-2xl max-w-2xl overflow-y-auto max-h-[80vh]">
+                    <div className="flex justify-center">
+                        <img src="/logo.png" alt="Logo" className="mb-6 w-40 h-auto" />
+                    </div>
                     <h1 className="text-2xl font-bold text-[#181e7e] mb-4 text-center">
                         Termos de Uso e Política de Privacidade
                     </h1>

@@ -60,13 +60,12 @@ export default function Users() {
   };
 
   return (
-    <section className="p-4">
-      {/* Header */}
-      <header className="flex items-center mb-4">
-        <h1 className="text-2xl font-bold">Usuários</h1>
+    <section className="p-4 bg-gray-100 min-h-screen">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold text-[#5F259F] mb-2 text-left">Usuários</h1>
+        <p className="text-gray-600">Visualize e gerencie seus usuários.</p>
       </header>
-
-      {/* Table */}
+      
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="text-xs font-medium text-gray-500 uppercase bg-gray-50 text-left">

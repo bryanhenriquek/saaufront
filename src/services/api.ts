@@ -44,6 +44,4 @@ export const register = async (data: FormData) => {
   return res.data;
 };
 
-
-
 export default api;

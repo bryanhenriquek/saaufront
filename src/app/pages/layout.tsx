@@ -22,7 +22,7 @@ export default function DashboardLayout({
   }, [router]);
 
   return (
-    <>
+    <div className="bg-[#f1f5f9] min-h-screen">
       <NaviBar />
       <div
         style={{
@@ -44,6 +44,6 @@ export default function DashboardLayout({
           }}
         />
       </div>
-    </>
+    </div>
   );
 }

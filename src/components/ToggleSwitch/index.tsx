@@ -23,7 +23,7 @@ export default function ToggleSwitch({
         relative inline-flex flex-shrink-0 h-6 w-11
         cursor-pointer rounded-full border-2 border-transparent
         transition-colors duration-200 ease-in-out
-        ${on ? 'bg-green-600' : 'bg-gray-200'}`}
+        ${on ? 'bg-[#5f259f]' : 'bg-gray-200'}`}
     >
       <span
         aria-hidden="true"
