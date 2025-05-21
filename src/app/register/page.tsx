@@ -1,0 +1,197 @@
+'use client'
+
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+
+export default function Register() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [cpf, setCpf] = useState('');
+    const [phone, setPhone] = useState('');
+
+    // ✅ Máscara de CPF
+    const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+
+        const formatted = value
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        setCpf(formatted);
+    };
+
+    // ✅ Máscara de Telefone
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+
+        if (value.length <= 10) {
+            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else {
+            value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        }
+
+        setPhone(value);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target as HTMLFormElement);
+
+        const payload = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            birthdate: formData.get('birthdate'),
+            document: cpf,
+            phone: phone,
+        };
+
+        console.log('Payload:', payload);
+
+        // try {
+        //     await register(payload);
+        //     router.push('/login');
+        // } catch (error) {
+        //     console.error(error);
+        //     toast.error('Erro no cadastro');
+        // }
+    };
+
+    return (
+        <main className="min-h-screen bg-[url('/back_ground.png')] bg-cover bg-center">
+            <div className="flex flex-col items-center justify-center h-screen px-4 bg-amber-300">
+                <div className="text-2xl font-bold mb-5 text-[#181e7e]">
+                    Cadastro
+                </div>
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col gap-4 bg-white bg-opacity-80 p-8 rounded-xl shadow-2xl w-auto"
+                >
+                    {/* Nome */}
+                    <div className="flex flex-col w-xs">
+                        <label htmlFor="username" className="mb-1 font-semibold text-sm text-black">
+                            Nome completo
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            required
+                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                        />
+                    </div>
+
+                    {/* Email */}
+                    <div className="flex flex-col w-xs">
+                        <label htmlFor="email" className="mb-1 font-semibold text-sm text-black">
+                            E-mail
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                        />
+                    </div>
+
+                    {/* Senha */}
+                    <div className="flex flex-col">
+                        <label htmlFor="password" className="mb-1 font-semibold text-sm text-black">
+                            Senha
+                        </label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                name="password"
+                                required
+                                className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(v => !v)}
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
+                            >
+                                {showPassword
+                                    ? <EyeOff size={20} color='black' />
+                                    : <Eye size={20} color='black' />
+                                }
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Data de nascimento */}
+                    <div className="flex flex-col w-xs">
+                        <label htmlFor="birthdate" className="mb-1 font-semibold text-sm text-black">
+                            Data de nascimento
+                        </label>
+                        <input
+                            type="date"
+                            id="birthdate"
+                            name="birthdate"
+                            required
+                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                        />
+                    </div>
+
+                    {/* CPF */}
+                    <div className="flex flex-col w-xs">
+                        <label htmlFor="document" className="mb-1 font-semibold text-sm text-black">
+                            CPF
+                        </label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            id="document"
+                            name="document"
+                            value={cpf}
+                            onChange={handleCpfChange}
+                            maxLength={14}
+                            required
+                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                        />
+                    </div>
+
+                    {/* Telefone */}
+                    <div className="flex flex-col w-xs">
+                        <label htmlFor="phone" className="mb-1 font-semibold text-sm text-black">
+                            Telefone
+                        </label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            id="phone"
+                            name="phone"
+                            value={phone}
+                            onChange={handlePhoneChange}
+                            maxLength={15}
+                            required
+                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                        />
+                    </div>
+
+                    {/* Botão */}
+                    <button
+                        type="submit"
+                        className="bg-[#181e7e] text-white py-2 px-4 rounded-md hover:bg-blue-900 transition cursor-pointer"
+                    >
+                        Cadastrar
+                    </button>
+                </form>
+
+                {/* Link para login */}
+                <div className="flex justify-center text-sm text-gray-500 mt-4">
+                    <span className="mr-1">Já tem uma conta?</span>
+                    <Link href="/" className="text-blue-500 hover:underline">
+                        Entrar
+                    </Link>
+                </div>
+            </div>
+        </main>
+    );
+}
