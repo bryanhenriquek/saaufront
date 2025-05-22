@@ -6,6 +6,7 @@ import { register } from '@/services/api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Register() {
     const router = useRouter();
@@ -66,7 +67,7 @@ export default function Register() {
     return (
         <main className="min-h-screen flex">
             <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
-                <img src="/logo.png" alt="Logo" className="mb-6 w-40 h-auto" />
+                <Image src="/logo.png" alt="Logo" className="mb-6 h-auto" width={350} height={350}/>
                 <h2 className="text-4xl font-bold mb-4">Já possui login?</h2>
                 <p className="mb-6 text-center max-w-sm">
                     Clique no botão abaixo.

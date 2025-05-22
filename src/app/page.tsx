@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { login } from '@/services/api';
-import toast from 'react-hot-toast';
+//import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Login() {
   const router = useRouter();
@@ -25,17 +26,17 @@ export default function Login() {
       localStorage.setItem('refreshToken', response.refresh);
       localStorage.setItem('user', JSON.stringify(response.user));
 
-      router.push('/pages/users');
+      router.push('/pages/profile');
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error("Erro ao fazer login.");
+      //toast.error("Erro ao fazer login.");
     }
   };
 
   return (
     <main className="min-h-screen flex">
       <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
-        <img src="/logo.png" alt="Logo" className="mb-6 w-40 h-auto" />
+        <Image src="/logo.png" alt="Logo" className="mb-6 h-auto" width={350} height={350}/>
         <h2 className="text-4xl font-bold mb-4">Bem-vindo(a)</h2>
         <p className="mb-6 text-center max-w-sm">
           Caso ainda não tenha cadastro, clique no botão abaixo.
