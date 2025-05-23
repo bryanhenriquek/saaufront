@@ -3,6 +3,8 @@ import toast from 'react-hot-toast';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+console.log('API URL:', process.env.NEXT_PUBLIC_API_URL);
+
 export const authApi = axios.create({
   baseURL: API_BASE_URL,
 });
