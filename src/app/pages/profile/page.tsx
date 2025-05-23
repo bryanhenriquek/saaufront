@@ -39,6 +39,7 @@ export default function Profile() {
             } catch (error) {
                 console.error(error)
                 toast.error('Erro ao carregar dados do usuário.');
+                // comentario
                 router.push('/');
             } finally {
                 setLoading(false);
