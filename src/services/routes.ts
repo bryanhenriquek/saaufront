@@ -11,7 +11,7 @@ export const register = async (data: FormData) => {
   return res.data;
 };
 
-// Token
+// Token tresy
 export const changePassword = async (data: {
   old_password: string;
   new_password: string;
