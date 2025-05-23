@@ -1,8 +1,6 @@
 import axios, { AxiosError } from "axios";
 import toast from 'react-hot-toast';
 
-//import { User } from '@/interfaces';
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
@@ -11,27 +9,13 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    if (config.url?.endsWith("login/")) {
-      return config;
-    }
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    console.error("API Error:", error.response || error.message);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -61,14 +45,35 @@ export const register = async (data: FormData) => {
   return res.data;
 };
 
+export const changePassword = async (data: {
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+}) => {
+  const res = await api.put('reset_password/', data);
+  return res.data;
+};
+
 export const listUsers = async () => {
   const res = await api.get("users/listUser/");
   return res.data;
-}
+};
 
 export const deleteUser = async (id: number) => {
   const res = await api.delete(`users/deleteUser/${id}/`);
   return res.data;
-}
+};
+
+export const getUser = async (id: number) => {
+  const res = await api.get(`users/${id}/`);
+  return res.data;
+};
+
+export const updateUserStatus = async (id: number) => {
+  const response = await api.put(
+    `users/${id}/toggle-active/`,
+  );
+  return response.data;
+};
 
 export default api;

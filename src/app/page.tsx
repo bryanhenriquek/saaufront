@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <main className="min-h-screen flex">
       <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
-        <Image src="/logo.png" alt="Logo" className="mb-6 h-auto" width={350} height={350}/>
+        <Image src="/logo.png" alt="Logo" className="mb-6" width={350} height={350} />
         <h2 className="text-4xl font-bold mb-4">Bem-vindo(a)</h2>
         <p className="mb-6 text-center max-w-sm">
           Caso ainda não tenha cadastro, clique no botão abaixo.
@@ -47,7 +47,17 @@ export default function Login() {
         >
           CADASTRAR
         </Link>
+
+        <div className="justify-end flex flex-col items-center mt-10 underline cursor-pointer">
+          <Link
+            href="/about"
+          >
+            Veja como o projeto foi construido!
+          </Link>
+        </div>
+
       </div>
+
       <div className="w-1/2 bg-gray-100 flex flex-col items-center justify-center p-10">
         <form
           onSubmit={handleSubmit}

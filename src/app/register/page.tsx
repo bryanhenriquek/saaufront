@@ -67,7 +67,7 @@ export default function Register() {
     return (
         <main className="min-h-screen flex">
             <div className="w-1/2 bg-[#5F259F] text-white flex flex-col items-center justify-center p-8">
-                <Image src="/logo.png" alt="Logo" className="mb-6 h-auto" width={350} height={350}/>
+                <Image src="/logo.png" alt="Logo" className="mb-6" width={350} height={350}/>
                 <h2 className="text-4xl font-bold mb-4">Já possui login?</h2>
                 <p className="mb-6 text-center max-w-sm">
                     Clique no botão abaixo.
