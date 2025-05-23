@@ -1,4 +1,3 @@
-// api.ts
 import axios, { AxiosError } from "axios";
 import toast from 'react-hot-toast';
 
@@ -12,7 +11,6 @@ export const publicApi = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Auth interceptor only on authApi
 authApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -24,7 +22,6 @@ authApi.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Shared response interceptor
 const handleError = (error: AxiosError<{ error?: string; detail?: string }>) => {
   const backendMessage =
     error.response?.data?.error ||

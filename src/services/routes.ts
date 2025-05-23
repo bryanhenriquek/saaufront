@@ -1,6 +1,6 @@
 import { authApi, publicApi } from "./api";
 
-// 🔓 Rotas públicas (não exigem token)
+// Sem token
 export const login = async (data: FormData) => {
   const res = await publicApi.post("login/", data);
   return res.data;
@@ -11,7 +11,7 @@ export const register = async (data: FormData) => {
   return res.data;
 };
 
-// 🔐 Rotas autenticadas (exigem token)
+// Token
 export const changePassword = async (data: {
   old_password: string;
   new_password: string;
