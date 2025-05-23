@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 
 import { User } from '@/interfaces';
-import { deleteUser, getUser, changePassword } from '@/services/api';
+import { deleteUser, getUser, changePassword } from '@/services/routes';
 import { getUserFromToken } from '@/utils/tokenDecode';
 
 import PasswordInput from '@/components/PasswordInput';

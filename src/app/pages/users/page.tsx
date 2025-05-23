@@ -1,14 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import toast from 'react-hot-toast';
-import { listUsers, deleteUser, updateUserStatus, register } from '@/services/api';
+import { listUsers, deleteUser, updateUserStatus, register as registerUser } from '@/services/routes';
 import { User } from '@/interfaces';
 import { createPortal } from 'react-dom';
 import { getUserFromToken } from '@/utils/tokenDecode';
 import { useRouter } from 'next/navigation';
+
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { registerSchema, RegisterFormData } from '@/validations/validationSchema';
 
 export default function Users() {
   const router = useRouter();
@@ -20,14 +24,27 @@ export default function Users() {
   const [cpf, setCpf] = useState('');
   const [phone, setPhone] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<RegisterFormData>({
+    resolver: yupResolver(registerSchema),
+  });
+
   useEffect(() => {
     const user = getUserFromToken();
     if (!user) {
-      toast.error("Usuário não encontrado");
+      toast.error('Usuário não encontrado');
       router.push('/login');
     } else if (user.role !== 'master') {
-      toast.error("Acesso negado");
-      router.push('/');
+      toast.error('Acesso negado');
+      router.push('/pages/profile');
     }
 
     const fetchUsers = async () => {
@@ -53,10 +70,10 @@ export default function Users() {
       await deleteUser(deleting.id);
       setUsers((prev) => prev.filter((u) => u.id !== deleting.id));
       setDeleting(null);
-      toast.success("Usuário apagado com sucesso!");
+      toast.success('Usuário apagado com sucesso!');
     } catch (error) {
       console.error(error);
-      //toast.error("Erro ao apagar usuário");
+      toast.error('Erro ao apagar usuário');
     } finally {
       setLoading(false);
     }
@@ -70,7 +87,7 @@ export default function Users() {
     );
     try {
       await updateUserStatus(id);
-      toast.success(`Usuário ${newState ? "ativado" : "desativado"}!`);
+      toast.success(`Usuário ${newState ? 'ativado' : 'desativado'}!`);
     } catch (err) {
       console.error(err);
       setUsers((u) =>
@@ -78,7 +95,7 @@ export default function Users() {
           user.id === id ? { ...user, is_active: !newState } : user
         )
       );
-      toast.error("Falha ao atualizar status.");
+      toast.error('Falha ao atualizar status.');
     }
   };
 
@@ -90,6 +107,7 @@ export default function Users() {
       .replace(/(\d{3})(\d)/, '$1.$2')
       .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     setCpf(formatted);
+    setValue('cpf', formatted);
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,25 +119,27 @@ export default function Users() {
       value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
     }
     setPhone(value);
+    setValue('phone', value);
   };
 
-  const handleCreateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-
-    formData.set('document', cpf);
-    formData.set('phone', phone);
-    formData.set('role', 'master');
-    formData.set('is_active', 'true');
-    formData.set('is_superuser', 'true');
-    formData.set('is_staff', 'true');
+  const handleCreateUser = async (data: RegisterFormData) => {
+    const formData = new FormData();
+    formData.append('username', data.username);
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('birth_date', data.birth_date);
+    formData.append('document', data.cpf);
+    formData.append('phone', data.phone);
+    formData.append('role', 'master');
+    formData.append('is_active', 'true');
+    formData.append('is_superuser', 'true');
+    formData.append('is_staff', 'true');
 
     try {
-      await register(formData);
+      await registerUser(formData);
       toast.success('Usuário criado com sucesso!');
       setCreating(false);
-      form.reset();
+      reset();
       setCpf('');
       setPhone('');
       const updated = await listUsers();
@@ -154,7 +174,7 @@ export default function Users() {
               <tr>
                 <th className="px-6 py-3">Nome</th>
                 <th className="px-6 py-3">E-mail</th>
-                <th className="px-6 py-3">Data de nascimento</th>
+                <th className="px-6 py-3">Nascimento</th>
                 <th className="px-6 py-3">CPF</th>
                 <th className="px-6 py-3">Telefone</th>
                 <th className="px-6 py-3">Tipo</th>
@@ -170,9 +190,7 @@ export default function Users() {
                   <td className="px-6 py-4">{user.birth_date}</td>
                   <td className="px-6 py-4">{user.document}</td>
                   <td className="px-6 py-4">{user.phone}</td>
-                  <td className="px-6 py-4">
-                    {user.is_staff ? 'Administrador' : 'Usuário'}
-                  </td>
+                  <td className="px-6 py-4">{user.is_staff ? 'Administrador' : 'Usuário'}</td>
                   <td className="px-6 py-4">
                     <ToggleSwitch
                       defaultOn={user.is_active}
@@ -195,42 +213,7 @@ export default function Users() {
         )}
       </div>
 
-      {/* Modal de Deletar */}
-      {deleting &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm text-black"
-            onClick={() => setDeleting(null)}
-          >
-            <div
-              className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className="text-lg font-bold mb-4 text-black">Deletar usuário</h2>
-              <p className="mb-4 text-black">
-                Você tem certeza que deseja deletar o usuário{' '}
-                <strong>{deleting.username}</strong>?
-              </p>
-              <div className="flex justify-end gap-2">
-                <button
-                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
-                  onClick={() => setDeleting(null)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
-                  onClick={confirmDelete}
-                >
-                  {loading ? 'Deletando...' : 'Deletar'}
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {/* Cadastro de usuário master */}
+      {/* Modal de Cadastro */}
       {creating &&
         createPortal(
           <div
@@ -241,63 +224,61 @@ export default function Users() {
               className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-lg font-bold mb-4 text-black">Criar novo usuário master</h2>
-              <form onSubmit={handleCreateUser} className="space-y-4">
-                <div>
-                  <label className="block text-sm mb-1">Nome</label>
-                  <input
-                    name="username"
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">E-mail</label>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">Senha</label>
-                  <input
-                    name="password"
-                    type="password"
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">Data de Nascimento</label>
-                  <input
-                    name="birth_date"
-                    type="date"
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">CPF</label>
-                  <input
-                    name="document"
-                    value={cpf}
-                    onChange={handleCpfChange}
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">Telefone</label>
-                  <input
-                    name="phone"
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    required
-                    className="w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
+              <h2 className="text-lg font-bold mb-4">Criar novo usuário master</h2>
+
+              <form onSubmit={handleSubmit(handleCreateUser)} className="space-y-4">
+                {[
+                  { label: 'Nome', name: 'username', type: 'text' },
+                  { label: 'E-mail', name: 'email', type: 'email' },
+                  { label: 'Senha', name: 'password', type: showPassword ? 'text' : 'password' },
+                  { label: 'Confirmar Senha', name: 'confirmPassword', type: showConfirmPassword ? 'text' : 'password' },
+                  { label: 'Nascimento', name: 'birth_date', type: 'date' },
+                  { label: 'CPF', name: 'cpf', type: 'text' },
+                  { label: 'Telefone', name: 'phone', type: 'text' },
+                ].map(({ label, name, type }) => (
+                  <div key={name}>
+                    <label className="block text-sm mb-1">{label}</label>
+                    <div className="relative">
+                      <input
+                        type={type}
+                        {...register(name as keyof RegisterFormData)}
+                        value={name === 'cpf' ? cpf : name === 'phone' ? phone : undefined}
+                        onChange={
+                          name === 'cpf'
+                            ? handleCpfChange
+                            : name === 'phone'
+                            ? handlePhoneChange
+                            : undefined
+                        }
+                        className="w-full border border-gray-300 rounded-md p-2 pr-10"
+                      />
+                      {(name === 'password' || name === 'confirmPassword') && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (name === 'password') {
+                              setShowPassword((prev) => !prev);
+                            } else {
+                              setShowConfirmPassword((prev) => !prev);
+                            }
+                          }}
+                          className="absolute inset-y-0 right-2 flex items-center"
+                        >
+                          {(name === 'password' ? showPassword : showConfirmPassword) ? (
+                            <EyeOff size={18} className="text-gray-600" />
+                          ) : (
+                            <Eye size={18} className="text-gray-600" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                    {errors[name as keyof RegisterFormData] && (
+                      <p className="text-red-500 text-xs">
+                        {errors[name as keyof RegisterFormData]?.message?.toString()}
+                      </p>
+                    )}
+                  </div>
+                ))}
 
                 <div className="flex justify-end gap-2">
                   <button
@@ -315,6 +296,40 @@ export default function Users() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Modal de Deletar */}
+      {deleting &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm text-black"
+            onClick={() => setDeleting(null)}
+          >
+            <div
+              className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-lg font-bold mb-4">Deletar usuário</h2>
+              <p className="mb-4">
+                Tem certeza que deseja deletar o usuário <strong>{deleting.username}</strong>?
+              </p>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+                  onClick={() => setDeleting(null)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                  onClick={confirmDelete}
+                >
+                  {loading ? 'Deletando...' : 'Deletar'}
+                </button>
+              </div>
             </div>
           </div>,
           document.body
