@@ -162,6 +162,23 @@ export default function Register() {
                         {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
                     </div>
 
+                    <div className="flex items-start">
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            {...register('terms')}
+                            className="mt-1 mr-2"
+                        />
+                        <label htmlFor="terms" className="text-sm text-gray-600">
+                            Ao clicar em <strong>Cadastrar</strong>, você concorda com nossos{' '}
+                            <Link href="/terms" className="text-[#5F259F] hover:underline">Termos de Serviço</Link> e{' '}
+                            <Link href="/terms" className="text-[#5F259F] hover:underline">Política de Privacidade</Link>.
+                        </label>
+                    </div>
+                    {errors.terms && (
+                        <p className="text-red-500 text-sm">{errors.terms.message}</p>
+                    )}
+
                     {/* Botão */}
                     <button type="submit" className="bg-[#5F259F] text-white py-2 px-4 rounded-md hover:bg-[#2e124f] transition">
                         Cadastrar
