@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { login } from '@/services/routes';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 //import toast from 'react-hot-toast';
@@ -19,6 +20,8 @@ type LoginFormData = {
 export default function Login() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isShowing, setIsShowing] = useState(false);
+
 
   const {
     register: registerInput,
@@ -81,9 +84,8 @@ export default function Login() {
               type="text"
               id="email"
               {...registerInput('email')}
-              className={`border ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black`}
+              className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'
+                } rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black`}
             />
             {errors.email && (
               <span className="text-red-500 text-xs">{errors.email.message}</span>
@@ -100,9 +102,8 @@ export default function Login() {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 {...registerInput('password')}
-                className={`w-full border ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
-                } rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black`}
+                className={`w-full border ${errors.password ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black`}
               />
               <button
                 type="button"
@@ -130,8 +131,36 @@ export default function Login() {
               Políticas de Privacidade e os Termos de Uso
             </Link>
           </div>
+
+          <div className="justify-end flex flex-col items-center mt-1 underline cursor-pointer text-black"
+            onClick={() => setIsShowing(true)}
+          >
+            Como logar como um usuário Master?
+          </div>
         </form>
       </div>
+
+      {isShowing && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setIsShowing(false)}
+        >
+          <div className="bg-white rounded-xl max-w-md p-6 text-black" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-bold mb-4">Login Master</h2>
+            <h3>Se esse projeto estivesse realmente em produção, estas informações não seriam públicas como agora!!!</h3>
+            <div className="mt-4">
+              <p>E-mail:fabianomaster@saau.com</p>
+              <p>Senha:Aa12345678!</p>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setIsShowing(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 cursor-pointer">
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </main>
   );
 }
