@@ -69,7 +69,7 @@ Este projeto foi desenvolvido como parte de uma atividade acadêmica da **Univer
 
 ## 🎥 Demonstração
 
-[![YouTube](https://img.youtube.com/vi/fX5USg8_1gA/0.jpg)](https://www.youtube.com/watch?v=fX5USg8_1gA)
+[![YouTube](https://img.youtube.com/vi/jxRZ4axIN4I/0.jpg)](https://www.youtube.com/watch?v=jxRZ4axIN4I)
 
 ---
 

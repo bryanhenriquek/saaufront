@@ -15,7 +15,7 @@ export default function About() {
                     <div className="w-full aspect-video mb-6">
                         <iframe
                             className="w-full h-full rounded-xl"
-                            src="https://www.youtube.com/embed/fX5USg8_1gA"
+                            src="https://www.youtube.com/embed/jxRZ4axIN4I"
                             title="YouTube video"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
