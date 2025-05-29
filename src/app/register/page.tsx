@@ -62,7 +62,7 @@ export default function Register() {
             router.push('/');
         } catch (error) {
             console.error(error);
-            toast.error('Erro no cadastro');
+            //toast.error('Erro no cadastro');
         }
     };
 

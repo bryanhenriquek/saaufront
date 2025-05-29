@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import toast from 'react-hot-toast';
+//import toast from 'react-hot-toast';
 
 type LoginFormData = {
   email: string;
@@ -43,7 +43,7 @@ export default function Login() {
       router.push('/pages/profile');
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error("Erro ao fazer login.");
+      //toast.error("Erro ao fazer login.");
     }
   };
 
