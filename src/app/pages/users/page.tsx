@@ -135,7 +135,6 @@ export default function Users() {
     formData.append('is_superuser', 'true');
     formData.append('is_staff', 'true');
 
-
     try {
       await registerUser(formData);
       toast.success('Usuário criado com sucesso!');
