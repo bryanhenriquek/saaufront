@@ -24,14 +24,38 @@ authApi.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const handleError = (error: AxiosError<{ error?: string; detail?: string }>) => {
-  const backendMessage =
-    error.response?.data?.error ||
-    error.response?.data?.detail ||
-    error.message ||
-    "Ocorreu um erro inesperado";
+const handleError = (error: AxiosError<Record<string, string[] | string>>) => {
+  const data = error.response?.data;
 
-  toast.error(backendMessage);
+  let backendMessage: string | undefined;
+
+  // Tenta usar campos genéricos como 'error' ou 'detail'
+  if (data && typeof data === 'object') {
+    const errorField = data.error;
+    const detailField = data.detail;
+
+    if (typeof errorField === 'string') backendMessage = errorField;
+    else if (typeof detailField === 'string') backendMessage = detailField;
+  }
+
+  // Se ainda não tem mensagem, tenta extrair a primeira mensagem de campo
+  if (!backendMessage && typeof data === 'object') {
+    const firstKey = Object.keys(data)[0];
+    const fieldError = data[firstKey];
+
+    if (Array.isArray(fieldError)) {
+      backendMessage = fieldError[0];
+    } else if (typeof fieldError === 'string') {
+      backendMessage = fieldError;
+    }
+  }
+
+  // fallback
+  if (!backendMessage) {
+    backendMessage = error.message || 'Ocorreu um erro inesperado';
+  }
+
+  toast.error(backendMessage); // garantido string agora
 
   (error as AxiosError & { customMessage?: string }).customMessage = backendMessage;
 
