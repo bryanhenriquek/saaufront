@@ -59,6 +59,37 @@ export const registerSchema = yup.object().shape({
     .required('É necessário aceitar os Termos de Serviço e Política de Privacidade'),
 });
 
+export const MasterregisterSchema = yup.object().shape({
+  username: yup.string().required('Nome é obrigatório').min(3, 'Nome muito curto'),
+  email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+  birth_date: yup.string().required('Data de nascimento é obrigatória'),
+  cpf: yup
+    .string()
+    .required('CPF é obrigatório')
+    .transform(value => value?.replace(/\D/g, ''))
+    .test('is-valid-cpf', 'CPF inválido', (value) => isValidCPF(value || '')),
+  phone: yup
+    .string()
+    .required('Telefone é obrigatório')
+    .transform(value => value?.replace(/\D/g, ''))
+    .min(10, 'Telefone inválido'),
+  password: yup
+    .string()
+    .required('Senha é obrigatória')
+    .test(
+      'is-strong',
+      'A senha deve ter pelo menos:\n- 8 caracteres\n- 1 letra maiúscula\n- 1 caractere especial',
+      (value) =>
+        (value?.length ?? 0) >= 8 &&
+        /[A-Z]/.test(value ?? '') &&
+        /[!@#$%^&*(),.?":{}|<>]/.test(value ?? '')
+    ),
+  confirmPassword: yup
+    .string()
+    .required('Confirmação de senha é obrigatória')
+    .oneOf([yup.ref('password')], 'Senhas não são idênticas'),
+});
+
 export const loginSchema = yup.object().shape({
   email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
   password: yup
@@ -72,3 +103,4 @@ export const loginSchema = yup.object().shape({
 
 
 export type RegisterFormData = yup.InferType<typeof registerSchema>;
+export type MasterRegisterFormData = yup.InferType<typeof MasterregisterSchema>;
