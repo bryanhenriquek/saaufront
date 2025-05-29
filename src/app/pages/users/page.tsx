@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerSchema, RegisterFormData } from '@/validations/validationSchema';
+import { MasterregisterSchema, MasterRegisterFormData } from '@/validations/validationSchema';
 
 export default function Users() {
   const router = useRouter();
@@ -33,8 +33,8 @@ export default function Users() {
     setValue,
     formState: { errors },
     reset,
-  } = useForm<RegisterFormData>({
-    resolver: yupResolver(registerSchema),
+  } = useForm<MasterRegisterFormData>({
+    resolver: yupResolver(MasterregisterSchema),
   });
 
   useEffect(() => {
@@ -122,14 +122,14 @@ export default function Users() {
     setValue('phone', value);
   };
 
-  const handleCreateUser = async (data: RegisterFormData) => {
+  const handleCreateUser = async (data: MasterRegisterFormData) => {
     const formData = new FormData();
     formData.append('username', data.username);
     formData.append('email', data.email);
     formData.append('password', data.password);
     formData.append('birth_date', data.birth_date);
-    formData.append('document', data.cpf);
-    formData.append('phone', data.phone);
+    formData.append('document', data.cpf.replace(/\D/g, ''));
+    formData.append('phone', data.phone.replace(/\D/g, ''));
     formData.append('role', 'master');
     formData.append('is_active', 'true');
     formData.append('is_superuser', 'true');
@@ -241,15 +241,12 @@ export default function Users() {
                     <div className="relative">
                       <input
                         type={type}
-                        {...register(name as keyof RegisterFormData)}
-                        value={name === 'cpf' ? cpf : name === 'phone' ? phone : undefined}
-                        onChange={
-                          name === 'cpf'
-                            ? handleCpfChange
-                            : name === 'phone'
-                            ? handlePhoneChange
-                            : undefined
-                        }
+                        {...register(name as keyof MasterRegisterFormData)}
+                        {...(name === 'cpf'
+                          ? { value: cpf, onChange: handleCpfChange }
+                          : name === 'phone'
+                            ? { value: phone, onChange: handlePhoneChange }
+                            : {})}
                         className="w-full border border-gray-300 rounded-md p-2 pr-10"
                       />
                       {(name === 'password' || name === 'confirmPassword') && (
@@ -272,9 +269,9 @@ export default function Users() {
                         </button>
                       )}
                     </div>
-                    {errors[name as keyof RegisterFormData] && (
+                    {errors[name as keyof MasterRegisterFormData] && (
                       <p className="text-red-500 text-xs">
-                        {errors[name as keyof RegisterFormData]?.message?.toString()}
+                        {errors[name as keyof MasterRegisterFormData]?.message?.toString()}
                       </p>
                     )}
                   </div>
