@@ -29,7 +29,6 @@ const handleError = (error: AxiosError<Record<string, string[] | string>>) => {
 
   let backendMessage: string | undefined;
 
-  // Tenta usar campos genéricos como 'error' ou 'detail'
   if (data && typeof data === 'object') {
     const errorField = data.error;
     const detailField = data.detail;
@@ -38,7 +37,6 @@ const handleError = (error: AxiosError<Record<string, string[] | string>>) => {
     else if (typeof detailField === 'string') backendMessage = detailField;
   }
 
-  // Se ainda não tem mensagem, tenta extrair a primeira mensagem de campo
   if (!backendMessage && typeof data === 'object') {
     const firstKey = Object.keys(data)[0];
     const fieldError = data[firstKey];
@@ -50,12 +48,11 @@ const handleError = (error: AxiosError<Record<string, string[] | string>>) => {
     }
   }
 
-  // fallback
   if (!backendMessage) {
     backendMessage = error.message || 'Ocorreu um erro inesperado';
   }
 
-  toast.error(backendMessage); // garantido string agora
+  toast.error(backendMessage);
 
   (error as AxiosError & { customMessage?: string }).customMessage = backendMessage;
 
